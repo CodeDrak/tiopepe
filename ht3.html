@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Tío Pepe | Sabor que Cautiva</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display (Elegante) & Montserrat (Moderno) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animaciones -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pepeRed: '#E63946',
+                        pepeGold: '#FFB703',
+                        pepeDark: '#0B0B0B',
+                        pepeGray: '#1A1A1A',
+                    },
+                    fontFamily: {
+                        display: ['Playfair Display', 'serif'],
+                        body: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0B0B0B;
+            color: #FFFFFF;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #0B0B0B;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .loader-circle {
+            width: 80px;
+            height: 80px;
+            border: 4px solid #1A1A1A;
+            border-top: 4px solid #E63946;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- BACKGROUND PARALLAX --- */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* --- TEXT GRADIENT & SHADOWS --- */
+        .text-gradient {
+            background: linear-gradient(to right, #E63946, #FFB703);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- FLOATING ANIMATION --- */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* --- GLASSMORPHISM --- */
+        .glass {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass:hover {
+            background: rgba(230, 57, 70, 0.1);
+            border-color: rgba(230, 57, 70, 0.4);
+            transform: translateY(-5px);
+            transition: all 0.4s ease;
+        }
+
+        /* --- TAB ACTIVE --- */
+        .tab-btn.active {
+            background-color: #E63946;
+            color: white;
+            box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
+        }
+
+        /* --- SCROLL PROGRESS --- */
+        #scroll-progress {
+            position: fixed;
+            top: 0; left: 0; height: 3px;
+            background: linear-gradient(to right, #E63946, #FFB703);
+            z-index: 10000;
+            width: 0%;
+        }
+    </style>
+</head>
+<body class="selection:bg-pepeRed selection:text-white">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-circle mb-4"></div>
+        <img src="image_0.png" class="w-16 opacity-50 mb-2" alt="Logo">
+        <p class="text-[10px] uppercase tracking-[0.4em] font-bold text-pepeRed">Cocinando Experiencia...</p>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div id="scroll-progress"></div>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/51978637680?text=¡Hola%20Tío%20Pepe!%20Vengo%20de%20la%20web%20y%20quiero%20hacer%20un%20pedido." 
+       id="wa-float" 
+       target="_blank"
+       class="fixed bottom-8 right-8 z-[100] flex items-center gap-3 bg-[#25D366] p-4 rounded-full shadow-2xl hover:scale-110 transition-transform group">
+        <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 whitespace-nowrap font-bold text-sm px-0 group-hover:px-2">Pedir Delivery</span>
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Navigation -->
+    <nav id="nav" class="fixed w-full z-50 py-6 transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-4 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <img src="image_0.png" class="w-12 h-12 rounded-full border-2 border-pepeRed" alt="Tío Pepe Logo">
+                <div>
+                    <h1 class="font-display font-bold text-xl leading-none">EL TÍO PEPE</h1>
+                    <span id="header-status" class="text-[9px] font-bold uppercase tracking-widest text-neutral-500">Verificando Horario...</span>
+                </div>
+            </div>
+            
+            <div class="hidden lg:flex items-center gap-10 font-bold text-xs uppercase tracking-widest">
+                <a href="#inicio" class="hover:text-pepeRed transition-colors">Inicio</a>
+                <a href="#menu" class="hover:text-pepeRed transition-colors">La Carta</a>
+                <a href="#nosotros" class="hover:text-pepeRed transition-colors">Calidad</a>
+                <a href="#ubicacion" class="hover:text-pepeRed transition-colors">Ubicación</a>
+                <a href="https://wa.me/51978637680" class="bg-pepeRed px-6 py-3 rounded-full hover:bg-white hover:text-black transition-all shadow-lg">Pedir Ya</a>
+            </div>
+
+            <button class="lg:hidden text-2xl"><i class="fas fa-utensils"></i></button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-pepeDark/40 via-pepeDark/80 to-pepeDark"></div>
+            <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&q=80&w=2071" 
+                 class="w-full h-full object-cover" alt="Hero Food">
+        </div>
+
+        <div class="relative z-10 text-center px-4 max-w-5xl" data-aos="zoom-out" data-aos-duration="1500">
+            <span class="inline-block bg-pepeRed/20 text-pepeRed px-4 py-1 rounded-full text-xs font-bold uppercase tracking-[0.3em] mb-6 border border-pepeRed/30">
+                Sabor Artesanal en Pativilca
+            </span>
+            <h2 class="font-display text-6xl md:text-9xl italic font-black mb-6 leading-tight">
+                EL ARTE DE <br> <span class="text-gradient">CENAR BIEN</span>
+            </h2>
+            <p class="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+                Descubre por qué somos el punto favorito de la noche. Pollos, alitas y hamburguesas preparadas con pasión y servidas con orgullo.
+            </p>
+            <div class="flex flex-col md:flex-row gap-5 justify-center">
+                <a href="#menu" class="bg-white text-black px-10 py-5 rounded-full font-bold text-lg hover:bg-pepeRed hover:text-white transition-all transform hover:-translate-y-1">
+                    Explorar Carta
+                </a>
+                <a href="https://wa.me/51978637680" class="border border-white/20 px-10 py-5 rounded-full font-bold text-lg hover:bg-white/5 transition-all">
+                    Delivery Inmediato
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-30">
+            <i class="fas fa-chevron-down text-3xl"></i>
+        </div>
+    </section>
+
+    <!-- Highlights Section -->
+    <section id="nosotros" class="py-24 px-6 bg-[#080808]">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="text-center group" data-aos="fade-up">
+                <div class="w-20 h-20 bg-pepeRed/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 group-hover:bg-pepeRed transition-colors duration-500">
+                    <i class="fas fa-fire-alt text-3xl text-pepeRed group-hover:text-white"></i>
+                </div>
+                <h3 class="font-display text-2xl mb-4 italic">Fuego Real</h3>
+                <p class="text-neutral-500 text-sm leading-relaxed">Cocción perfecta controlada grado a grado para que cada bocado sea jugoso y crujiente.</p>
+            </div>
+            <div class="text-center group" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-20 h-20 bg-pepeGold/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 group-hover:bg-pepeGold transition-colors duration-500">
+                    <i class="fas fa-award text-3xl text-pepeGold group-hover:text-white"></i>
+                </div>
+                <h3 class="font-display text-2xl mb-4 italic">Calidad 140g</h3>
+                <p class="text-neutral-500 text-sm leading-relaxed">Nuestras hamburguesas son de pura carne de res, sin mezclas, solo sabor artesanal de casa.</p>
+            </div>
+            <div class="text-center group" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-20 h-20 bg-green-500/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 group-hover:bg-green-500 transition-colors duration-500">
+                    <i class="fas fa-shipping-fast text-3xl text-green-500 group-hover:text-white"></i>
+                </div>
+                <h3 class="font-display text-2xl mb-4 italic">Envío Térmico</h3>
+                <p class="text-neutral-500 text-sm leading-relaxed">Tu pedido sale del Food Truck directo a tu mesa, garantizando la temperatura perfecta.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20" data-aos="fade-down">
+                <p class="text-pepeRed font-bold uppercase tracking-[0.4em] text-[10px] mb-4">Experiencia Gastronómica</p>
+                <h2 class="font-display text-5xl md:text-7xl italic font-black uppercase">NUESTRA <span class="text-gradient">CARTA</span></h2>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="flex overflow-x-auto pb-10 gap-4 no-scrollbar justify-start lg:justify-center" id="tabs-container">
+                <!-- Se inyecta con JS -->
+            </div>
+
+            <!-- Products Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[500px]" id="menu-grid">
+                <!-- Se inyecta con JS -->
+            </div>
+
+            <!-- Special Promo Banner -->
+            <div class="mt-24 glass p-10 md:p-20 rounded-[3rem] relative overflow-hidden group" data-aos="zoom-in">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-pepeRed/10 blur-[100px] group-hover:bg-pepeRed/20 transition-all"></div>
+                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+                    <div class="text-center md:text-left">
+                        <h3 class="font-display text-4xl md:text-5xl italic font-black mb-4">¿HAMBRE EN MANCHA?</h3>
+                        <p class="text-neutral-400 text-lg">Consulta por nuestros combos parrilleros y alitas familiares.</p>
+                    </div>
+                    <a href="https://wa.me/51978637680?text=Hola!%20Qué%20combos%20tienes%20hoy?" class="bg-pepeRed text-white px-12 py-5 rounded-full font-bold shadow-xl hover:scale-110 transition-transform">Consultar Combos</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section id="ubicacion" class="py-32 px-6 bg-pepeGray/30 relative">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div data-aos="fade-right">
+                <h2 class="font-display text-5xl font-black mb-10 italic">DONDE OCURRE <br><span class="text-pepeRed uppercase">LA MAGIA</span></h2>
+                <div class="space-y-10">
+                    <div class="flex gap-6">
+                        <div class="text-pepeRed text-3xl"><i class="fas fa-map-marked-alt"></i></div>
+                        <div>
+                            <h4 class="font-bold text-xl mb-2">San Martín #190</h4>
+                            <p class="text-neutral-500 italic">Pativilca – Ex Panamericana Norte</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="text-pepeRed text-3xl"><i class="far fa-clock"></i></div>
+                        <div>
+                            <h4 class="font-bold text-xl mb-2">Horario de Cena</h4>
+                            <p class="text-neutral-500">Martes a Domingo: <span class="text-white font-bold">6:45 PM – 11:20 PM</span></p>
+                            <p class="text-neutral-600 text-xs mt-1">Lunes de Descanso Operativo</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="text-pepeRed text-3xl"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <h4 class="font-bold text-xl mb-2">Contacto Directo</h4>
+                            <p class="text-3xl font-display text-pepeGold font-black tracking-tighter">978 637 680</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative h-[500px] rounded-[3rem] overflow-hidden group shadow-2xl" data-aos="zoom-in">
+                <div class="absolute inset-0 bg-pepeDark flex items-center justify-center flex-col gap-6 text-center group-hover:scale-105 transition-transform duration-700">
+                    <i class="fas fa-compass text-6xl text-pepeRed animate-pulse mb-4"></i>
+                    <h3 class="font-display text-2xl italic font-bold">Pativilca nos conoce</h3>
+                    <p class="text-neutral-500 max-w-xs">Busca el Food Truck del Tío Pepe en la zona de San Martín.</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query=San+Martín+190+Pativilca" target="_blank" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-pepeRed hover:text-white transition-all">Ver en Google Maps</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 border-t border-white/5 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-center items-center gap-4 mb-10">
+                <div class="h-[1px] w-12 bg-pepeRed"></div>
+                <img src="image_0.png" class="h-16 rounded-full grayscale hover:grayscale-0 transition-all duration-500" alt="Logo">
+                <div class="h-[1px] w-12 bg-pepeRed"></div>
+            </div>
+            <p class="text-neutral-400 max-w-md mx-auto mb-10 font-light">
+                Cocinando los mejores momentos de tu noche en Pativilca. Calidad que se siente, sabor que se recuerda.
+            </p>
+            <div class="flex justify-center gap-8 text-2xl mb-16">
+                <a href="#" class="text-neutral-600 hover:text-pepeRed transition-colors"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-neutral-600 hover:text-pepeRed transition-colors"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-neutral-600 hover:text-pepeRed transition-colors"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <p class="text-[9px] font-bold uppercase tracking-[1em] text-neutral-800">El Tío Pepe // © 2025</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // --- DATA HUB ---
+        const MENU_DATA = {
+            broaster: [
+                { id: 1, name: "Mega Broaster", desc: "La porción perfecta: 2 presas de pollo gigante con papas crujientes.", price: "S/ 12.00", badge: "Más Vendido" },
+                { id: 2, name: "Broaster Tradicional", desc: "Un clásico imbatible. Pollo marinado por 12h y nabo encurtido.", price: "S/ 13.00", badge: "Favorito" }
+            ],
+            alitas: [
+                { id: 3, name: "Alitas Acevichadas", desc: "La firma del Tío. Salsa acevichada fresca con un toque de ají.", price: "S/ 13 | 25 | 46", info: "6 / 14 / 28 unidades", hot: true },
+                { id: 4, name: "BBQ & Chijaukay", desc: "Glaseado dulce ahumado o estilo oriental tradicional.", price: "S/ 12 | 23 | 44", info: "6 / 14 / 28 unidades" },
+                { id: 5, name: "Picantes & Clásicas", desc: "Para los amantes del fuego o de la crocancia pura.", price: "S/ 12 | 23 | 44", info: "6 / 14 / 28 unidades", hot: true }
+            ],
+            burgers: [
+                { id: 6, name: "Burger de la Casa (140g)", desc: "Res artesanal, huevo frito, jamón, queso y vegetales frescos.", price: "S/ 10.00", badge: "Calidad Pro" }
+            ],
+            snacks: [
+                { id: 7, name: "Lomo de Carne / Pollo", desc: "Jugoso lomo saltado al wok servido en pan francés crujiente.", price: "Consulta", badge: "Caliente" },
+                { id: 8, name: "Sandwiches Clásicos", desc: "Palta sazonada, Queso derretido o Mixtos especiales.", price: "Consulta" }
+            ],
+            drinks: [
+                { id: 9, name: "Cervezas Frías", desc: "Pilsen, Cristal, Cusqueña, Corona, Heineken (Lata/Botella).", price: "S/ 6.00 - 7.00" },
+                { id: 10, name: "Energy & Mixes", desc: "Monster Energy, Mike's Limonada, Mojito Cartavio.", price: "S/ 5.00 - 8.00" }
+            ]
+        };
+
+        const CATEGORIES = [
+            { id: 'broaster', name: 'Broaster' },
+            { id: 'alitas', name: 'Alitas' },
+            { id: 'burgers', name: 'Hamburguesas' },
+            { id: 'snacks', name: 'Sándwiches' },
+            { id: 'drinks', name: 'Bebidas' }
+        ];
+
+        let activeTab = 'broaster';
+
+        // --- FUNCTIONS ---
+
+        function updateScheduleStatus() {
+            const now = new Date();
+            const day = now.getDay();
+            const hour = now.getHours();
+            const min = now.getMinutes();
+            const currentTime = hour * 60 + min;
+
+            const open = 18 * 60 + 45; 
+            const close = 23 * 60 + 20;
+
+            const headerStatus = document.getElementById('header-status');
+            const waFloat = document.getElementById('wa-float');
+
+            if (day !== 1 && currentTime >= open && currentTime <= close) {
+                headerStatus.innerText = "Abierto ahora • Hasta 11:20 PM";
+                headerStatus.className = "text-[9px] font-bold uppercase tracking-widest text-green-500 animate-pulse";
+            } else {
+                headerStatus.innerText = "Cerrado • Abrimos 6:45 PM";
+                headerStatus.className = "text-[9px] font-bold uppercase tracking-widest text-pepeRed opacity-50";
+            }
+        }
+
+        function renderMenu() {
+            const tabs = document.getElementById('tabs-container');
+            const grid = document.getElementById('menu-grid');
+
+            // Render Tabs
+            tabs.innerHTML = CATEGORIES.map(cat => `
+                <button onclick="changeTab('${cat.id}')" 
+                        class="tab-btn px-8 py-3 rounded-full font-bold uppercase text-[10px] tracking-widest transition-all whitespace-nowrap border border-white/5 bg-pepeGray/40
+                        ${activeTab === cat.id ? 'active' : 'text-neutral-500 hover:bg-pepeGray/80 hover:text-white'}">
+                    ${cat.name}
+                </button>
+            `).join('');
+
+            // Render Grid
+            grid.innerHTML = MENU_DATA[activeTab].map((item, idx) => `
+                <div class="glass p-8 rounded-[2.5rem] flex flex-col justify-between group" data-aos="fade-up" data-aos-delay="${idx * 100}">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="font-display text-2xl italic font-bold group-hover:text-pepeRed transition-colors">${item.name}</h3>
+                            ${item.badge ? `<span class="bg-pepeRed text-[8px] font-bold px-2 py-1 rounded-lg uppercase tracking-widest text-white">${item.badge}</span>` : ''}
+                            ${item.hot ? `<i class="fas fa-fire text-orange-500"></i>` : ''}
+                        </div>
+                        <p class="text-neutral-500 text-sm mb-6 font-light leading-relaxed">${item.desc}</p>
+                        ${item.info ? `<p class="text-[9px] font-black text-neutral-600 uppercase tracking-widest mb-6">${item.info}</p>` : ''}
+                    </div>
+                    <div class="flex items-center justify-between mt-auto pt-6 border-t border-white/5">
+                        <span class="text-3xl font-display font-black">${item.price}</span>
+                        <a href="https://wa.me/51978637680?text=¡Tío Pepe! Quiero pedir: ${item.name}" target="_blank"
+                           class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-pepeRed transition-all">
+                            <i class="fas fa-plus text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeTab(id) {
+            activeTab = id;
+            renderMenu();
+            AOS.refresh();
+        }
+
+        // --- INIT & SCROLL ---
+        window.onload = () => {
+            // Eliminar preloader
+            const preloader = document.getElementById('preloader');
+            preloader.style.opacity = '0';
+            setTimeout(() => preloader.style.visibility = 'hidden', 800);
+
+            AOS.init({ duration: 1000, once: true });
+            updateScheduleStatus();
+            renderMenu();
+            setInterval(updateScheduleStatus, 60000);
+        };
+
+        window.onscroll = () => {
+            const nav = document.getElementById('nav');
+            const progress = document.getElementById('scroll-progress');
+            
+            // Scroll Progress
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progress.style.width = scrolled + "%";
+
+            // Navbar Glass
+            if (winScroll > 100) {
+                nav.classList.add('bg-pepeDark/90', 'backdrop-blur-xl', 'py-4', 'border-b', 'border-white/5');
+            } else {
+                nav.classList.remove('bg-pepeDark/90', 'backdrop-blur-xl', 'py-4', 'border-b', 'border-white/5');
+            }
+        };
+
+    </script>
+</body>
+</html>
